@@ -23,7 +23,7 @@ export default async function sendEmail(context, options) {
   const { Shops } = collections;
 
   const { to } = options;
-  let { from, fromShop, fromShopId } = options;
+  let { from, fromShop, fromShopId, after } = options;
   if (!to) throw new Error("sendEmail requires a TO address");
   if (!fromShopId && !fromShop) throw new Error("sendEmail requires fromShop or fromShopId");
 
@@ -78,6 +78,7 @@ export default async function sendEmail(context, options) {
   return backgroundJobs.scheduleJob({
     type: "sendEmail",
     data: jobData,
+    after,
     retry: {
       retries: 5,
       wait: 3 * 60000
